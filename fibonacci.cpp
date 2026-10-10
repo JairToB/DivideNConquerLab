@@ -1,7 +1,7 @@
 #include<iostream>
 #include<vector>
 #include<chrono>
-
+#define AVERAGE_MEASURE 100
 extern std::vector<std::vector<int>> powerMatrixLog(std::vector<std::vector<int>> matrix, int position);
 int fibonacciLinear(int position){
     int accumulator = 1;
@@ -27,16 +27,22 @@ int fibonacciLogarithmic(int position, std::vector<std::vector<int>> matrix){
 
 double measureFibonacciLinear(int position) {
     auto start = std::chrono::high_resolution_clock::now();
-    fibonacciLinear(position);
+    for(int i = 0; i < AVERAGE_MEASURE; ++i){
+        fibonacciLinear(position);
+    }
     auto end = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration<double, std::micro>(end - start).count();
+    double totalMicroseconds = std::chrono::duration<double, std::micro>(end - start).count();
+    return totalMicroseconds/AVERAGE_MEASURE;
 }
 
 double measureFibonacciLogarithmic(int position, const std::vector<std::vector<int>>& matrix) {
     auto start = std::chrono::high_resolution_clock::now();
-    fibonacciLogarithmic(position, matrix);
+    for(int i = 0; i < AVERAGE_MEASURE; ++i){
+        fibonacciLogarithmic(position, matrix);
+    }
     auto end = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration<double, std::micro>(end - start).count();
+    double totalMicroseconds = std::chrono::duration<double, std::micro>(end - start).count();
+    return totalMicroseconds/AVERAGE_MEASURE;
 }
 
 int main(){
