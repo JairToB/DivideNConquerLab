@@ -27,6 +27,7 @@ std::vector<std::vector<int>> powerMatrixLog(std::vector<std::vector<int>> m, in
         return d;
     }
 }
+/*
 int main(){
     std::vector<std::vector<int>> matrix(2, std::vector<int>(2));
     int exponent;
@@ -44,4 +45,4 @@ int main(){
         std::cout << std::endl;
     }
     return 0;
-}
+}*/
