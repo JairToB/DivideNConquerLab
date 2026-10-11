@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<chrono>
 
 void matrixMultiplication(std::vector<std::vector<int>>& A, std::vector<std::vector<int>>& B, std::vector<std::vector<int>>& C){
     for(int i = 0; i < A.size(); i++){
@@ -122,6 +123,20 @@ std::vector<std::vector<int>> matrixStrassen(std::vector<std::vector<int>>& A, s
     return C;
 }
 
+double measureStrassen(std::vector<std::vector<int>>& A, std::vector<std::vector<int>>& B, std::vector<std::vector<int>>& C, int n) {
+    auto start = std::chrono::high_resolution_clock::now();
+    matrixStrassen(A, B, C, n);
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double, std::micro>(end - start).count();
+}
+
+double measureStandard(std::vector<std::vector<int>>& A, std::vector<std::vector<int>>& B, std::vector<std::vector<int>>& C) {
+    auto start = std::chrono::high_resolution_clock::now();
+    matrixMultiplication(A, B, C);
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double, std::micro>(end - start).count();
+}
+
 void printMatrix(std::vector<std::vector<int>> matrixRandom){
     for(int i = 0; i < matrixRandom.size(); i++){
         for(int j = 0; j < matrixRandom[i].size(); j++){
@@ -132,13 +147,16 @@ void printMatrix(std::vector<std::vector<int>> matrixRandom){
 }
 
 int main(){
-    std::vector<std::vector<int>> matrixA (2, std::vector<int>(2,3));
-    std::vector<std::vector<int>> matrixB (2, std::vector<int>(2,3));
-    std::vector<std::vector<int>> matrixC (2, std::vector<int>(2,0));
-    
-    //matrixMultiplication(matrixA, matrixB, matrixC);
-    matrixStrassen(matrixA, matrixB,matrixC, 2);
-    printMatrix(matrixC);
+    int n = 256;
+    for(int i = 2; i <= n; i = i * 2){
+        std::vector<std::vector<int>> matrixA(i, std::vector<int>(i, 3));
+        std::vector<std::vector<int>> matrixB(i, std::vector<int>(i, 3));
+        std::vector<std::vector<int>> matrixC(i, std::vector<int>(i, 0));
+
+        double totalTimeStandard = measureStandard(matrixA, matrixB, matrixC);
+        double totalTimeStrassen = measureStrassen(matrixA, matrixB, matrixC, i);
+        std::cout << i << " " << totalTimeStandard << " " << totalTimeStrassen << std::endl;
+    }
 
     return 0;
 }
